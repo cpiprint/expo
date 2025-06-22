@@ -7,6 +7,7 @@
 ### 🎉 New features
 
 - [Android][iOS] Add `keepScreenOnWhilePlaying` property to the player. ([#37137](https://github.com/expo/expo/pull/37137) by [@behenate](https://github.com/behenate))
+- [Android] Support Foreground service when `showNowPlayingNotification` and `supportsBackgroundPlayback` are configured. ([#37225](https://github.com/expo/expo/pull/37566) by [@kerwanp](https://github.com/kerwanp))
 
 ### 🐛 Bug fixes
 
