@@ -9,11 +9,11 @@
 ### 🐛 Bug fixes
 
 - [Android] Emit state update after reload. ([#39003](https://github.com/expo/expo/pull/39003) by [@alanjhughes](https://github.com/alanjhughes))
-- Correctly export enum values.
+- Correctly export enum values. ([#38940](https://github.com/expo/expo/pull/38940) by [@alanjhughes](https://github.com/alanjhughes))
 
 ### 💡 Others
 
-- Repurpose audio recording tests.
+- Repurpose audio recording tests. ([#38940](https://github.com/expo/expo/pull/38940) by [@alanjhughes](https://github.com/alanjhughes))
 
 ## 1.0.3 — 2025-08-18
 
