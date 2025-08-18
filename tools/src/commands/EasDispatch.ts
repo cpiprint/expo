@@ -703,7 +703,12 @@ async function processIosTarArchiveAsync(archivePath: string, projectDir: string
   const tempExtractDir = path.join(projectDir, 'temp-extract');
   try {
     await mkdirp(tempExtractDir);
-    await spawnAsync('tar', ['-xzf', archivePath, '-C', tempExtractDir], {
+    const gtarInstalled = await spawnAsync('which', ['gtar']).then(() => true).catch(() => false);
+    if (!gtarInstalled) {
+      throw new Error('GNU tar is not installed. Please install it using `brew install gnu-tar`.');
+    }
+
+    await spawnAsync('gtar', ['-xzf', archivePath, '-C', tempExtractDir], {
       stdio: 'pipe',
     });
 
@@ -715,14 +720,14 @@ async function processIosTarArchiveAsync(archivePath: string, projectDir: string
     const appBundle = extractedContents.find((item) => item.endsWith('.app'));
     if (appBundle) {
       const appBundlePath = path.join(tempExtractDir, appBundle);
-      await spawnAsync('tar', ['-zcvf', archivePath, '-C', appBundlePath, '.'], {
+      await spawnAsync('gtar', ['-zcvf', archivePath, '-C', appBundlePath, '.'], {
         stdio: 'pipe',
       });
       logger.info(`Created tar from .app bundle contents: ${archivePath}`);
     }
     // If no .app file, check if it's a valid iOS app bundle. tar.gz could be from Cloudfront URL.
     else if (fs.existsSync(path.join(tempExtractDir, 'Info.plist'))) {
-      await spawnAsync('tar', ['-zcvf', archivePath, '-C', tempExtractDir, '.'], {
+      await spawnAsync('gtar', ['-zcvf', archivePath, '-C', tempExtractDir, '.'], {
         stdio: 'pipe',
       });
       logger.info(`Created tar from extracted contents: ${archivePath}`);
