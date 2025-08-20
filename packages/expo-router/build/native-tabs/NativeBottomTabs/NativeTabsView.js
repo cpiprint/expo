@@ -97,9 +97,29 @@ function Screen(props) {
             disabled: baseAppearance,
         },
     };
-    return (<react_native_screens_1.BottomTabsScreen {...descriptor.options} tabBarItemBadgeBackgroundColor={style?.badgeBackgroundColor} tabBarItemBadgeTextColor={style?.badgeTextColor} standardAppearance={appearance} scrollEdgeAppearance={appearance} iconResourceName={descriptor.options.icon?.drawable} icon={convertOptionsIconToPropsIcon(descriptor.options.icon)} selectedIcon={convertOptionsIconToPropsIcon(descriptor.options.selectedIcon)} title={title} freezeContents={false} tabKey={routeKey} isFocused={isFocused}>
+    const icon = useAwaitedScreensIcon(descriptor.options.icon);
+    const selectedIcon = useAwaitedScreensIcon(descriptor.options.selectedIcon);
+    return (<react_native_screens_1.BottomTabsScreen {...descriptor.options} tabBarItemBadgeBackgroundColor={style?.badgeBackgroundColor} tabBarItemBadgeTextColor={style?.badgeTextColor} standardAppearance={appearance} scrollEdgeAppearance={appearance} iconResourceName={descriptor.options.icon?.drawable} icon={icon} selectedIcon={icon ? selectedIcon : undefined} title={title} freezeContents={false} tabKey={routeKey} isFocused={isFocused}>
       {descriptor.render()}
     </react_native_screens_1.BottomTabsScreen>);
+}
+function useAwaitedScreensIcon(icon) {
+    const isAwaited = isAwaitedIcon(icon);
+    const [awaitedIcon, setAwaitedIcon] = (0, react_1.useState)(isAwaited ? icon : undefined);
+    const screensIcon = (0, react_1.useMemo)(() => convertOptionsIconToPropsIcon(awaitedIcon), [awaitedIcon]);
+    (0, react_1.useEffect)(() => {
+        const loadIcon = async () => {
+            if (icon && 'src' in icon && icon.src instanceof Promise) {
+                const currentAwaitedIcon = { src: await icon.src };
+                setAwaitedIcon(currentAwaitedIcon);
+            }
+        };
+        loadIcon();
+    }, [icon]);
+    return screensIcon;
+}
+function isAwaitedIcon(icon) {
+    return !icon || !('src' in icon && icon.src instanceof Promise);
 }
 function convertOptionsIconToPropsIcon(icon) {
     if (!icon) {

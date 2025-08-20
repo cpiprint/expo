@@ -1,4 +1,5 @@
-import React, { useDeferredValue } from 'react';
+import React, { useDeferredValue, useEffect, useMemo, useState } from 'react';
+import type { ImageSourcePropType } from 'react-native';
 import {
   BottomTabs,
   BottomTabsScreen,
@@ -6,6 +7,7 @@ import {
   type BottomTabsProps,
   type BottomTabsScreenProps,
 } from 'react-native-screens';
+import type { SFSymbol } from 'sf-symbols-typescript';
 
 import {
   SUPPORTED_BLUR_EFFECTS,
@@ -122,6 +124,9 @@ function Screen(props: {
     },
   };
 
+  const icon = useAwaitedScreensIcon(descriptor.options.icon);
+  const selectedIcon = useAwaitedScreensIcon(descriptor.options.selectedIcon);
+
   return (
     <BottomTabsScreen
       {...descriptor.options}
@@ -130,8 +135,8 @@ function Screen(props: {
       standardAppearance={appearance}
       scrollEdgeAppearance={appearance}
       iconResourceName={descriptor.options.icon?.drawable}
-      icon={convertOptionsIconToPropsIcon(descriptor.options.icon)}
-      selectedIcon={convertOptionsIconToPropsIcon(descriptor.options.selectedIcon)}
+      icon={icon}
+      selectedIcon={icon ? selectedIcon : undefined}
       title={title}
       freezeContents={false}
       tabKey={routeKey}
@@ -141,8 +146,38 @@ function Screen(props: {
   );
 }
 
+interface AwaitedIcon {
+  sf?: SFSymbol;
+  src?: ImageSourcePropType;
+  drawable?: string;
+}
+
+function useAwaitedScreensIcon(icon: NativeTabOptions['icon']) {
+  const isAwaited = isAwaitedIcon(icon);
+  const [awaitedIcon, setAwaitedIcon] = useState<AwaitedIcon | undefined>(
+    isAwaited ? icon : undefined
+  );
+  const screensIcon = useMemo(() => convertOptionsIconToPropsIcon(awaitedIcon), [awaitedIcon]);
+
+  useEffect(() => {
+    const loadIcon = async () => {
+      if (icon && 'src' in icon && icon.src instanceof Promise) {
+        const currentAwaitedIcon = { src: await icon.src };
+        setAwaitedIcon(currentAwaitedIcon);
+      }
+    };
+    loadIcon();
+  }, [icon]);
+
+  return screensIcon;
+}
+
+function isAwaitedIcon(icon: NativeTabOptions['icon']): icon is AwaitedIcon {
+  return !icon || !('src' in icon && icon.src instanceof Promise);
+}
+
 function convertOptionsIconToPropsIcon(
-  icon: NativeTabOptions['icon']
+  icon: AwaitedIcon | undefined
 ): BottomTabsScreenProps['icon'] {
   if (!icon) {
     return undefined;

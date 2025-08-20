@@ -54,7 +54,7 @@ export type SfSymbolOrImageSource = {
      * The image source to use as an icon.
      * @platform iOS
      */
-    src?: ImageSourcePropType;
+    src?: ImageSourcePropType | Promise<ImageSourcePropType>;
 };
 export interface ExtendedNativeTabOptions extends NativeTabOptions {
     /**

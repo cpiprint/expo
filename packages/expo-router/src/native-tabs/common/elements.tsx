@@ -23,12 +23,12 @@ export interface SourceIconCombination {
    * The image source to use as an icon.
    * @platform iOS
    */
-  src?: ImageSourcePropType;
+  src?: ImageSourcePropType | Promise<ImageSourcePropType>;
   /**
    * The image source to use as an icon when the tab is selected.
    * @platform iOS
    */
-  selectedSrc?: ImageSourcePropType;
+  selectedSrc?: ImageSourcePropType | Promise<ImageSourcePropType>;
   // TODO: Remove this when custom icons can be used on Android
   /**
    * The name of the drawable resource to use as an icon.
