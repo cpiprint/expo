@@ -35,13 +35,41 @@ export function NativeTabsView(props: NativeTabsViewProps) {
       const isFocused = index === deferredFocusedIndex;
       const title = descriptor.options.title ?? route.name;
 
+      if (style?.blurEffect && !supportedBlurEffectsSet.has(style.blurEffect)) {
+        throw new Error(
+          `Unsupported blurEffect: ${style.blurEffect}. Supported values are: ${SUPPORTED_BLUR_EFFECTS.map((effect) => `"${effect}"`).join(', ')}`
+        );
+      }
+
+      const baseAppearance = {
+        tabBarItemTitlePositionAdjustment: style?.titlePositionAdjustment,
+        tabBarBlurEffect: style?.blurEffect,
+        tabBarItemBadgeBackgroundColor: style?.badgeBackgroundColor,
+      };
+
+      const appearance = {
+        inline: {
+          normal: baseAppearance,
+          selected: baseAppearance,
+          focused: baseAppearance,
+          disabled: baseAppearance,
+        },
+        stacked: {
+          normal: baseAppearance,
+          selected: baseAppearance,
+          focused: baseAppearance,
+          disabled: baseAppearance,
+        },
+      };
+
       return (
         <BottomTabsScreen
           key={route.key}
           {...descriptor.options}
           tabBarItemBadgeBackgroundColor={style?.badgeBackgroundColor}
           tabBarItemBadgeTextColor={style?.badgeTextColor}
-          tabBarItemTitlePositionAdjustment={style?.titlePositionAdjustment}
+          standardAppearance={appearance}
+          scrollEdgeAppearance={appearance}
           iconResourceName={descriptor.options.icon?.drawable}
           icon={convertOptionsIconToPropsIcon(descriptor.options.icon)}
           selectedIcon={convertOptionsIconToPropsIcon(descriptor.options.selectedIcon)}
@@ -67,9 +95,7 @@ export function NativeTabsView(props: NativeTabsViewProps) {
       }
       tabBarItemTitleFontStyle={style?.fontStyle}
       tabBarBackgroundColor={style?.backgroundColor}
-      tabBarBlurEffect={style?.blurEffect}
       tabBarTintColor={style?.tintColor}
-      tabBarItemBadgeBackgroundColor={style?.badgeBackgroundColor}
       tabBarItemRippleColor={style?.rippleColor}
       tabBarItemLabelVisibilityMode={style?.labelVisibilityMode}
       tabBarItemIconColor={style?.iconColor}
@@ -116,8 +142,7 @@ const supportedTabBarItemLabelVisibilityModesSet = new Set<string>(
 const supportedBlurEffectsSet = new Set<string>(SUPPORTED_BLUR_EFFECTS);
 
 function BottomTabsWrapper(props: BottomTabsProps) {
-  const { tabBarMinimizeBehavior, tabBarItemLabelVisibilityMode, tabBarBlurEffect, ...rest } =
-    props;
+  const { tabBarMinimizeBehavior, tabBarItemLabelVisibilityMode, ...rest } = props;
   if (tabBarMinimizeBehavior && !supportedTabBarMinimizeBehaviorsSet.has(tabBarMinimizeBehavior)) {
     throw new Error(
       `Unsupported minimizeBehavior: ${tabBarMinimizeBehavior}. Supported values are: ${SUPPORTED_TAB_BAR_MINIMIZE_BEHAVIORS.map((behavior) => `"${behavior}"`).join(', ')}`
@@ -131,15 +156,9 @@ function BottomTabsWrapper(props: BottomTabsProps) {
       `Unsupported labelVisibilityMode: ${tabBarItemLabelVisibilityMode}. Supported values are: ${SUPPORTED_TAB_BAR_ITEM_LABEL_VISIBILITY_MODES.map((mode) => `"${mode}"`).join(', ')}`
     );
   }
-  if (tabBarBlurEffect && !supportedBlurEffectsSet.has(tabBarBlurEffect)) {
-    throw new Error(
-      `Unsupported blurEffect: ${tabBarBlurEffect}. Supported values are: ${SUPPORTED_BLUR_EFFECTS.map((effect) => `"${effect}"`).join(', ')}`
-    );
-  }
 
   return (
     <BottomTabs
-      tabBarBlurEffect={tabBarBlurEffect}
       tabBarItemLabelVisibilityMode={tabBarItemLabelVisibilityMode}
       tabBarMinimizeBehavior={tabBarMinimizeBehavior}
       {...rest}

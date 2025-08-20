@@ -53,7 +53,29 @@ function NativeTabsView(props) {
         const descriptor = descriptors[route.key];
         const isFocused = index === deferredFocusedIndex;
         const title = descriptor.options.title ?? route.name;
-        return (<react_native_screens_1.BottomTabsScreen key={route.key} {...descriptor.options} tabBarItemBadgeBackgroundColor={style?.badgeBackgroundColor} tabBarItemBadgeTextColor={style?.badgeTextColor} tabBarItemTitlePositionAdjustment={style?.titlePositionAdjustment} iconResourceName={descriptor.options.icon?.drawable} icon={convertOptionsIconToPropsIcon(descriptor.options.icon)} selectedIcon={convertOptionsIconToPropsIcon(descriptor.options.selectedIcon)} title={title} freezeContents={false} tabKey={route.key} isFocused={isFocused}>
+        if (style?.blurEffect && !supportedBlurEffectsSet.has(style.blurEffect)) {
+            throw new Error(`Unsupported blurEffect: ${style.blurEffect}. Supported values are: ${types_1.SUPPORTED_BLUR_EFFECTS.map((effect) => `"${effect}"`).join(', ')}`);
+        }
+        const baseAppearance = {
+            tabBarItemTitlePositionAdjustment: style?.titlePositionAdjustment,
+            tabBarBlurEffect: style?.blurEffect,
+            tabBarItemBadgeBackgroundColor: style?.badgeBackgroundColor,
+        };
+        const appearance = {
+            inline: {
+                normal: baseAppearance,
+                selected: baseAppearance,
+                focused: baseAppearance,
+                disabled: baseAppearance,
+            },
+            stacked: {
+                normal: baseAppearance,
+                selected: baseAppearance,
+                focused: baseAppearance,
+                disabled: baseAppearance,
+            },
+        };
+        return (<react_native_screens_1.BottomTabsScreen key={route.key} {...descriptor.options} tabBarItemBadgeBackgroundColor={style?.badgeBackgroundColor} tabBarItemBadgeTextColor={style?.badgeTextColor} standardAppearance={appearance} scrollEdgeAppearance={appearance} iconResourceName={descriptor.options.icon?.drawable} icon={convertOptionsIconToPropsIcon(descriptor.options.icon)} selectedIcon={convertOptionsIconToPropsIcon(descriptor.options.selectedIcon)} title={title} freezeContents={false} tabKey={route.key} isFocused={isFocused}>
           {descriptor.render()}
         </react_native_screens_1.BottomTabsScreen>);
     });
@@ -61,7 +83,7 @@ function NativeTabsView(props) {
     // Only string values are accepted by screens
     tabBarItemTitleFontWeight={style?.fontWeight
             ? String(style.fontWeight)
-            : undefined} tabBarItemTitleFontStyle={style?.fontStyle} tabBarBackgroundColor={style?.backgroundColor} tabBarBlurEffect={style?.blurEffect} tabBarTintColor={style?.tintColor} tabBarItemBadgeBackgroundColor={style?.badgeBackgroundColor} tabBarItemRippleColor={style?.rippleColor} tabBarItemLabelVisibilityMode={style?.labelVisibilityMode} tabBarItemIconColor={style?.iconColor} tabBarItemIconColorActive={style?.['&:active']?.iconColor ?? style?.tintColor} tabBarItemTitleFontColorActive={style?.['&:active']?.color ?? style?.tintColor} tabBarItemTitleFontSizeActive={style?.['&:active']?.fontSize} tabBarItemActiveIndicatorColor={style?.['&:active']?.indicatorColor} tabBarItemActiveIndicatorEnabled={!disableIndicator} tabBarMinimizeBehavior={minimizeBehavior} onNativeFocusChange={({ nativeEvent: { tabKey } }) => {
+            : undefined} tabBarItemTitleFontStyle={style?.fontStyle} tabBarBackgroundColor={style?.backgroundColor} tabBarTintColor={style?.tintColor} tabBarItemRippleColor={style?.rippleColor} tabBarItemLabelVisibilityMode={style?.labelVisibilityMode} tabBarItemIconColor={style?.iconColor} tabBarItemIconColorActive={style?.['&:active']?.iconColor ?? style?.tintColor} tabBarItemTitleFontColorActive={style?.['&:active']?.color ?? style?.tintColor} tabBarItemTitleFontSizeActive={style?.['&:active']?.fontSize} tabBarItemActiveIndicatorColor={style?.['&:active']?.indicatorColor} tabBarItemActiveIndicatorEnabled={!disableIndicator} tabBarMinimizeBehavior={minimizeBehavior} onNativeFocusChange={({ nativeEvent: { tabKey } }) => {
             const descriptor = descriptors[tabKey];
             const route = descriptor.route;
             navigation.dispatch({
@@ -91,7 +113,7 @@ const supportedTabBarMinimizeBehaviorsSet = new Set(types_1.SUPPORTED_TAB_BAR_MI
 const supportedTabBarItemLabelVisibilityModesSet = new Set(types_1.SUPPORTED_TAB_BAR_ITEM_LABEL_VISIBILITY_MODES);
 const supportedBlurEffectsSet = new Set(types_1.SUPPORTED_BLUR_EFFECTS);
 function BottomTabsWrapper(props) {
-    const { tabBarMinimizeBehavior, tabBarItemLabelVisibilityMode, tabBarBlurEffect, ...rest } = props;
+    const { tabBarMinimizeBehavior, tabBarItemLabelVisibilityMode, ...rest } = props;
     if (tabBarMinimizeBehavior && !supportedTabBarMinimizeBehaviorsSet.has(tabBarMinimizeBehavior)) {
         throw new Error(`Unsupported minimizeBehavior: ${tabBarMinimizeBehavior}. Supported values are: ${types_1.SUPPORTED_TAB_BAR_MINIMIZE_BEHAVIORS.map((behavior) => `"${behavior}"`).join(', ')}`);
     }
@@ -99,9 +121,6 @@ function BottomTabsWrapper(props) {
         !supportedTabBarItemLabelVisibilityModesSet.has(tabBarItemLabelVisibilityMode)) {
         throw new Error(`Unsupported labelVisibilityMode: ${tabBarItemLabelVisibilityMode}. Supported values are: ${types_1.SUPPORTED_TAB_BAR_ITEM_LABEL_VISIBILITY_MODES.map((mode) => `"${mode}"`).join(', ')}`);
     }
-    if (tabBarBlurEffect && !supportedBlurEffectsSet.has(tabBarBlurEffect)) {
-        throw new Error(`Unsupported blurEffect: ${tabBarBlurEffect}. Supported values are: ${types_1.SUPPORTED_BLUR_EFFECTS.map((effect) => `"${effect}"`).join(', ')}`);
-    }
-    return (<react_native_screens_1.BottomTabs tabBarBlurEffect={tabBarBlurEffect} tabBarItemLabelVisibilityMode={tabBarItemLabelVisibilityMode} tabBarMinimizeBehavior={tabBarMinimizeBehavior} {...rest}/>);
+    return (<react_native_screens_1.BottomTabs tabBarItemLabelVisibilityMode={tabBarItemLabelVisibilityMode} tabBarMinimizeBehavior={tabBarMinimizeBehavior} {...rest}/>);
 }
 //# sourceMappingURL=NativeTabsView.js.map

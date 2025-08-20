@@ -14,6 +14,8 @@
 
 ### 💡 Others
 
+- adjust native tabs to screens 4.15 ([#39017](https://github.com/expo/expo/pull/39017) by [@Ubax](https://github.com/Ubax))
+
 ## 6.0.0-beta.4 — 2025-08-19
 
 ### 🐛 Bug fixes
