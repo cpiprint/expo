@@ -52,32 +52,7 @@ function NativeTabsView(props) {
         .map(({ route, index }) => {
         const descriptor = descriptors[route.key];
         const isFocused = index === deferredFocusedIndex;
-        const title = descriptor.options.title ?? route.name;
-        if (style?.blurEffect && !supportedBlurEffectsSet.has(style.blurEffect)) {
-            throw new Error(`Unsupported blurEffect: ${style.blurEffect}. Supported values are: ${types_1.SUPPORTED_BLUR_EFFECTS.map((effect) => `"${effect}"`).join(', ')}`);
-        }
-        const baseAppearance = {
-            tabBarItemTitlePositionAdjustment: style?.titlePositionAdjustment,
-            tabBarBlurEffect: style?.blurEffect,
-            tabBarItemBadgeBackgroundColor: style?.badgeBackgroundColor,
-        };
-        const appearance = {
-            inline: {
-                normal: baseAppearance,
-                selected: baseAppearance,
-                focused: baseAppearance,
-                disabled: baseAppearance,
-            },
-            stacked: {
-                normal: baseAppearance,
-                selected: baseAppearance,
-                focused: baseAppearance,
-                disabled: baseAppearance,
-            },
-        };
-        return (<react_native_screens_1.BottomTabsScreen key={route.key} {...descriptor.options} tabBarItemBadgeBackgroundColor={style?.badgeBackgroundColor} tabBarItemBadgeTextColor={style?.badgeTextColor} standardAppearance={appearance} scrollEdgeAppearance={appearance} iconResourceName={descriptor.options.icon?.drawable} icon={convertOptionsIconToPropsIcon(descriptor.options.icon)} selectedIcon={convertOptionsIconToPropsIcon(descriptor.options.selectedIcon)} title={title} freezeContents={false} tabKey={route.key} isFocused={isFocused}>
-          {descriptor.render()}
-        </react_native_screens_1.BottomTabsScreen>);
+        return (<Screen key={route.key} routeKey={route.key} name={route.name} descriptor={descriptor} isFocused={isFocused} style={style}/>);
     });
     return (<BottomTabsWrapper tabBarItemTitleFontColor={style?.color} tabBarItemTitleFontFamily={style?.fontFamily} tabBarItemTitleFontSize={style?.fontSize} 
     // Only string values are accepted by screens
@@ -96,6 +71,35 @@ function NativeTabsView(props) {
         }}>
       {children}
     </BottomTabsWrapper>);
+}
+function Screen(props) {
+    const { routeKey, name, descriptor, isFocused, style } = props;
+    const title = descriptor.options.title ?? name;
+    if (style?.blurEffect && !supportedBlurEffectsSet.has(style.blurEffect)) {
+        throw new Error(`Unsupported blurEffect: ${style.blurEffect}. Supported values are: ${types_1.SUPPORTED_BLUR_EFFECTS.map((effect) => `"${effect}"`).join(', ')}`);
+    }
+    const baseAppearance = {
+        tabBarItemTitlePositionAdjustment: style?.titlePositionAdjustment,
+        tabBarBlurEffect: style?.blurEffect,
+        tabBarItemBadgeBackgroundColor: style?.badgeBackgroundColor,
+    };
+    const appearance = {
+        inline: {
+            normal: baseAppearance,
+            selected: baseAppearance,
+            focused: baseAppearance,
+            disabled: baseAppearance,
+        },
+        stacked: {
+            normal: baseAppearance,
+            selected: baseAppearance,
+            focused: baseAppearance,
+            disabled: baseAppearance,
+        },
+    };
+    return (<react_native_screens_1.BottomTabsScreen {...descriptor.options} tabBarItemBadgeBackgroundColor={style?.badgeBackgroundColor} tabBarItemBadgeTextColor={style?.badgeTextColor} standardAppearance={appearance} scrollEdgeAppearance={appearance} iconResourceName={descriptor.options.icon?.drawable} icon={convertOptionsIconToPropsIcon(descriptor.options.icon)} selectedIcon={convertOptionsIconToPropsIcon(descriptor.options.selectedIcon)} title={title} freezeContents={false} tabKey={routeKey} isFocused={isFocused}>
+      {descriptor.render()}
+    </react_native_screens_1.BottomTabsScreen>);
 }
 function convertOptionsIconToPropsIcon(icon) {
     if (!icon) {
