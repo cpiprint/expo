@@ -4327,8 +4327,8 @@ SPEC CHECKSUMS:
   GoogleAppMeasurement: 61605c4152a142d797383a713ecfa5df98fe46ca
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
-  GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
-  hermes-engine: b84fd163a2cc2b1c429f2d1f6e1c959e935ff517
+  GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
+  hermes-engine: 4bed76b345e63bdd77fa7e1a20ec957671ea1a49
   libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
