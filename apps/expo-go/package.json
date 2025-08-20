@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.4.10",
+    "@bottom-tabs/react-navigation": "~0.10.0",
     "@expo/styleguide-native": "^1.0.1",
     "@expo/vector-icons": "^14.0.0",
     "@gorhom/bottom-sheet": "5.1.8",
