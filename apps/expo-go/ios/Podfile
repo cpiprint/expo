@@ -36,6 +36,11 @@ target 'Expo Go' do
   pod 'nanopb', :modular_headers => true
   pod 'FirebaseCoreExtension', :modular_headers => true
 
+  # Required by react-native-bottom-tabs
+  # https://github.com/callstackincubator/react-native-bottom-tabs/blob/144316a3ec80004ce93841c96f00322198555cc2/docs/docs/docs/getting-started/quick-start.mdx?plain=1#L91
+  pod 'SDWebImage', :modular_headers => true
+  pod 'SDWebImageSVGCoder', :modular_headers => true
+
   # Expo modules
   use_expo_modules!({
     searchPaths: [
